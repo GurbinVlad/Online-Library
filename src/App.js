@@ -1,24 +1,23 @@
-import logo from './logo.svg';
-import './App.css';
+import AuthPage from "./Components/RegistrationAndAuthorization/Authorization.js";
+import RegPage from "./Components/RegistrationAndAuthorization/Registration.js";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import AuthProvider from "./Components/Context/AuthProvider";
+import MainMenu from "./Components/MainMenu/MainMenu.js";
+import "./App.css";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <AuthProvider>
+      <div className="App">
+        <Router>
+          <Routes>
+            <Route path="/" element={<MainMenu />} />
+            <Route path="/auth" element={<AuthPage />} />
+            <Route path="/register" element={<RegPage />} />
+          </Routes>
+        </Router>
+      </div>
+    </AuthProvider>
   );
 }
 

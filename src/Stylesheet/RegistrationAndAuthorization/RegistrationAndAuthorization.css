@@ -1,0 +1,119 @@
+.backgroundImg {
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 100%;
+    height: 703px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    z-index: -5;
+
+}
+
+.divOrderFormMain {
+    position: absolute;
+    padding-left: 32px;
+    top: 10.5%;
+    left: 7%;
+    width: 27%;
+    height: 500px;
+
+    border-radius: 15px;
+
+    box-shadow: 0 8px 12px 0 rgba(0, 0, 0, 0.2),
+    0 10px 24px 0 rgba(0, 0, 0, 0.19),
+    0 8px 12px 0 rgba(0, 0, 0, 0.2),
+    0 10px 24px 0 rgba(0, 0, 0, 0.19);
+
+    backdrop-filter: blur(6px);
+}
+
+.inputStyle {
+    margin-top: 40px;
+    top: 50px;
+    color: navajowhite;
+    text-shadow: 2px 2px 5px black;
+    font-family: "Book Antiqua", sans-serif;
+}
+
+.inputStyle input {
+    height: 35px;
+    width: 370px;
+
+    border-style: outset;
+    border-width: 2px;
+    border-color: navy;
+    border-radius: 10px;
+
+    box-shadow: 0 10px 14px 0 rgba(0, 0, 0, 0.2), 0 10px 24px 0 rgba(0, 0, 0, 0.19);
+    color: darkblue;
+    background-color: whitesmoke;
+}
+
+.buttonSubmit {
+    margin-left: 48px;
+    background-image: linear-gradient(to bottom right, darkolivegreen, mediumaquamarine);
+    color: whitesmoke;
+    height: 35px;
+    width: 125px;
+    margin-right: 20px;
+
+    border-radius: 10px;
+    transition: transform 0.2s ease-in-out;
+}
+
+.buttonSubmit:active {
+    transform: scale(0.95);
+}
+
+.buttonReset {
+    margin-top: 30px;
+    background-image: linear-gradient(to bottom right, darkkhaki, orangered);
+    color: white;
+    height: 35px;
+    width: 125px;
+
+    border-radius: 10px;
+    transition: transform 0.2s ease-in-out;
+}
+
+.buttonReset:active {
+    transform: scale(0.95);
+}
+
+.apiBooksLibraryName {
+    margin-top: 25px;
+    position: relative;
+    font-size: 30px;
+    color: darkslategrey;
+    text-shadow: 2px 2px 5px sienna;
+    font-weight: bold;
+    font-family: "Book Antiqua", sans-serif;
+}
+
+.authAndRegName {
+    position: relative;
+    padding-right: 50px;
+    text-align: center;
+    
+    font-size: 25px;
+    color: darkslategrey;
+    text-shadow: 2px 2px 5px sienna;
+    font-weight: bold;
+    font-family: "Book Antiqua", sans-serif;
+}
+
+.textTips {
+    padding-top: 15px;
+    padding-left: 40px;
+    font-family: "Book Antiqua", sans-serif;
+    text-shadow: 2px 2px 5px black;
+    color: wheat;
+}
+
+.linkTips {
+    font-family: "Book Antiqua", sans-serif;
+    color: darkseagreen;
+}

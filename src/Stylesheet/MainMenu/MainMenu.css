@@ -1,0 +1,161 @@
+.backgroundImg {
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 100%;
+    height: 703px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    z-index: -6;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #333;
+    color: #fff;
+    padding: 10px 20px;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    border-bottom-style: solid;
+    border-width: 3px;
+    border-color: black;
+    z-index: 2;
+}
+
+.navbar .site-title {
+    font-family: "Book Antiqua", sans-serif;
+    font-size: 25px;
+    text-shadow: 1px 1px 3px tan;
+}
+
+.navbar .nav-links {
+    display: flex;
+    font-size: 18px;
+    margin-left: 58%;
+    gap: 40px;
+    font-family: "Book Antiqua", sans-serif;
+    text-shadow: 1px 1px 3px tan;
+    letter-spacing: 1px;
+}
+
+.navbar .nav-links a {
+    color: #fff;
+    text-decoration: none;
+}
+
+.navbar .nav-links .active {
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-bottom: 2px;
+    border-style: inset;
+    border-radius: 10px;
+    border-width: 2px;
+    border-color: sandybrown;
+}
+
+.navbar .dropdown {
+    position: relative;
+    margin-right: 3%;
+    font-family: "Amiri", sans-serif;
+}
+
+.dropdown .dropbtn {
+    padding: 5px 10px;
+    font-size: 18px;
+    border-radius: 14px;
+    color: #17180e;
+    font-family: "Book Antiqua", sans-serif;
+    font-weight: bold;
+    text-shadow: 1px 1px 3px darkseagreen;
+    background-color: gainsboro;
+}
+
+.navbar .dropdown-content {
+    display: none;
+    position: absolute;
+    right: 0;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    border-radius: 10px;
+    text-shadow: 1px 1px 1px dimgray;
+    z-index: 1;
+}
+
+.navbar .dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+.navbar .dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.space {
+    padding-bottom: 65px;
+}
+
+.positionListOfBooks {
+    margin-left: 1%;
+    width: 62%;
+}
+
+.positionListOfBooks .listOfBooks {
+    position: relative;
+    color: black;
+    border-style: solid;
+    border-width: 2px;
+    border-radius: 10px;
+    border-color: lightslategray;
+    font-family: "Book Antiqua", sans-serif;
+    font-size: 23px;
+
+    margin-bottom: 10px;
+
+    padding-left: 5px;
+    text-shadow: 1px 1px 1px mediumaquamarine;
+    backdrop-filter: blur(4px);
+}
+
+.positionListOfBooks .listOfBooks .keyWords {
+    font-size: 25px;
+    font-weight: bold;
+    color: darkred;
+    text-shadow: 1px 1px 1px lightgray;
+}
+
+.buttonReadAndFavorite {
+    font-family: "Book Antiqua", sans-serif;
+    font-size: 14px;
+    text-shadow: 1px 1px 1px lightslategray;
+    margin-right: 40px;
+    position: relative;
+    top: 53px;
+    left: 63%;
+    color: white;
+    height: 35px;
+    width: 125px;
+
+    border-radius: 10px;
+    background-image: linear-gradient(to bottom right, darkkhaki, orangered);
+    transition: transform 0.05s ease-in-out;
+}
+
+.buttonReadAndFavorite:active {
+    transform: scale(0.9);
+}
+
+.body2 {
+    color: aqua;
+    font-size: 30px;
+}
+
+
+
