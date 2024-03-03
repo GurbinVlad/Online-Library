@@ -1,11 +1,11 @@
 import MainMenuImg from "../../Img/MainMenu/BackgroundImgMainMenu(Reverse).jpeg";
+import { toast, ToastContainer } from "react-toastify";
 import { Link, useNavigate } from "react-router-dom";
-import React, { Component } from "react";
+import AuthContext from "../Context/AuthContext";
 import "../../Stylesheet/MainMenu/MainMenu.css";
 import "react-toastify/dist/ReactToastify.css";
 import { Navbar, Nav } from "react-bootstrap";
-import AuthContext from "../Context/AuthContext";
-import { toast, ToastContainer } from "react-toastify";
+import React, { Component } from "react";
 
 const withNavigation = (Component) => (props) => {
   const navigate = useNavigate();
@@ -20,10 +20,15 @@ class MainMenu extends Component {
       activeButton: null,
       books: [],
       savedBooks: [],
+      isBookSaved: {},
     };
 
     this.handleClick = this.handleClick.bind(this);
     this.componentDidMount = this.componentDidMount.bind(this);
+    this.handleDownloadCSV = this.handleDownloadCSV.bind(this);
+    this.handleDeleteFavorite = this.handleDeleteFavorite.bind(this);
+    this.handleAddToFavorites = this.handleAddToFavorites.bind(this);
+    this.handleGetAllFavorites = this.handleGetAllFavorites.bind(this);
   }
 
   componentDidMount() {
@@ -54,9 +59,15 @@ class MainMenu extends Component {
           error,
         );
       });
+
+    this.handleGetAllFavorites(this.context.userID);
+    console.log(
+      `Функція this.handleGetAllFavorites() викликана у componentDidMount(), UserID: ` +
+        this.context.userID,
+    );
   }
 
-  // Функція для додавання книги до обраних
+  // Функція для додавання книжок в обрані
   handleAddToFavorites(userID, bookID) {
     fetch("http://localhost:3001/form-data-addSaveBook", {
       method: "POST",
@@ -67,6 +78,16 @@ class MainMenu extends Component {
     })
       .then((response) => response.json())
       .then((data) => {
+        if (data) {
+          // Оновлюємо стан кнопки додавання цієї книжки в обрані
+          this.setState((prevState) => ({
+            isBookSaved: {
+              ...prevState.isBookSaved,
+              [bookID]: true,
+            },
+          }));
+        }
+
         console.log("Success:", data);
       })
       .catch((error) => {
@@ -74,30 +95,25 @@ class MainMenu extends Component {
       });
   }
 
-  handleGetAllFavorites() {
-    if (this.context.userID !== null) {
-      fetch("/form-data-savedBooks/" + this.context.userID)
+  handleGetAllFavorites = (userID) => {
+    if (userID !== null) {
+      // Виклик API для отримання списку обраних книжок
+      fetch(`http://localhost:3001/form-data-savedBooks?userID=${userID}`)
         .then((response) => {
           if (!response.ok) {
             throw new Error("Network response was not ok");
           }
-          // Перевірка, чи відповідь містить JSON
-          console.log(response.url);
-          const contentType = response.headers.get("content-type");
-          if (contentType && contentType.indexOf("application/json") !== -1) {
-            return response.json();
-          } else {
-            // Якщо відповідь не містить JSON, вивести вміст відповіді
-            return response.text().then((text) => {
-              console.log(text);
-              throw new Error("Oops, we haven't got JSON!");
-            });
-          }
+          return response.json();
         })
-        .then((savedBooks) => {
-          this.setState({ savedBooks }, () => {
-            console.log(this.state.savedBooks);
-          });
+        .then((data) => {
+          if (data) {
+            // Оновлюємо стан savedBooks та isBookSaved на основі отриманих даних
+            const isBookSaved = {};
+            data.forEach((book) => {
+              isBookSaved[book.bookid] = true;
+            });
+            this.setState({ savedBooks: data, isBookSaved });
+          }
         })
         .catch((error) => {
           console.error(
@@ -106,6 +122,83 @@ class MainMenu extends Component {
           );
         });
     }
+  };
+
+  // Функція для видалення книжок з обраних
+  handleDeleteFavorite(userID, bookID) {
+    fetch(
+      `http://localhost:3001/form-data-deleteFromSavedBooks/${userID}/${bookID}`,
+      {
+        method: "DELETE",
+      },
+    )
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        if (data) {
+          // Оновлюємо стан кнопки додавання цієї книжки в обрані
+          this.setState((prevState) => ({
+            isBookSaved: {
+              ...prevState.isBookSaved,
+              [bookID]: false,
+            },
+          }));
+        }
+
+        console.log(data.message);
+        // Оновити список обраних книжок після видалення
+        this.handleGetAllFavorites(userID);
+      })
+      .catch((error) => {
+        console.error(
+          "There has been a problem with your fetch operation:",
+          error,
+        );
+      });
+  }
+
+  handleDownloadCSV(userID) {
+    fetch(`http://localhost:3001/export?userID=${userID}`)
+      .then((response) => {
+        if (response.status === 204) {
+          // Вивести повідомлення, якщо список порожній
+          toast(
+            "Ваш список обраних книжок пустий! Для початку додайте хоча б якусь книжку!",
+          );
+          throw new Error("No content"); // Зупинити подальше виконання
+        } else if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.blob();
+      })
+      .then((blob) => {
+        // Створити новий об'єкт URL для blob
+        const url = window.URL.createObjectURL(blob);
+        // Створити новий посилання DOM
+        const a = document.createElement("a");
+        a.style.display = "none";
+        a.href = url;
+        // Встановити ім'я файлу
+        a.download = "Favorites.csv";
+        // Додати посилання до документа
+        document.body.appendChild(a);
+        // Натиснути на посилання для завантаження
+        a.click();
+        // Видалити посилання після завантаження
+        document.body.removeChild(a);
+        // Вивести повідомлення про успішне завантаження
+        toast("Файл «Favorites.csv» завантажено!");
+      })
+      .catch((error) => {
+        console.error(
+          "There has been a problem with your fetch operation:",
+          error,
+        );
+      });
   }
 
   handleClick = (buttonName) => {
@@ -136,7 +229,7 @@ class MainMenu extends Component {
                 window.scrollTo(0, 0);
 
                 if (this.context.userID) {
-                  this.handleGetAllFavorites();
+                  this.handleGetAllFavorites(this.context.userID);
                 }
               }}
               className={
@@ -160,6 +253,7 @@ class MainMenu extends Component {
                   >
                     Профіль
                   </a>
+
                   <a
                     href="#"
                     onClick={() => this.handleClick("library")}
@@ -169,6 +263,16 @@ class MainMenu extends Component {
                   >
                     Налаштування
                   </a>
+
+                  <a
+                    onClick={() => {
+                      this.handleDownloadCSV(this.context.userID);
+                    }}
+                    href="#"
+                  >
+                    Завантажити список в «.csv»
+                  </a>
+
                   <Link
                     onClick={() => {
                       this.context.setUserID(null);
@@ -201,7 +305,10 @@ class MainMenu extends Component {
               <div className="listOfBooks" key={index}>
                 <button
                   type="button"
-                  className="buttonReadAndFavorite"
+                  className={`buttonReadAndFavorite ${
+                    this.state.isBookSaved[book.bookid] ? "disable" : ""
+                  }`}
+                  disabled={this.state.isBookSaved[book.bookid]} // Використовуємо стан книжки для визначення, чи відключати кнопку
                   onClick={() => {
                     if (this.context.userID) {
                       this.handleAddToFavorites(
@@ -216,7 +323,9 @@ class MainMenu extends Component {
                     }
                   }}
                 >
-                  Додати в обране
+                  {this.state.isBookSaved[book.bookid]
+                    ? "Додано в обрані"
+                    : "Додати в обране"}
                 </button>
 
                 <button type="button" className="buttonReadAndFavorite">
@@ -237,9 +346,19 @@ class MainMenu extends Component {
           <div id="myfavorites" className="positionListOfBooks">
             {this.context.userID ? (
               this.state.savedBooks.length > 0 ? (
-                this.state.savedBooks.map((savedbook, index) => (
+                this.state.savedBooks.map((savedBook, index) => (
                   <div className="listOfBooks" key={index}>
-                    <button type="button" className="buttonReadAndFavorite">
+                    <button
+                      type="button"
+                      className="buttonReadAndFavorite"
+                      onClick={() => {
+                        this.handleDeleteFavorite(
+                          this.context.userID,
+                          savedBook.bookid,
+                        );
+                        toast("Книжку видалено з обраних!");
+                      }}
+                    >
                       Видалити
                     </button>
 
@@ -248,11 +367,11 @@ class MainMenu extends Component {
                     </button>
 
                     <p style={{ marginTop: "-15px" }}>
-                      <b className="keyWords">Назва:</b> «{savedbook.title}»{" "}
+                      <b className="keyWords">Назва:</b> «{savedBook.title}»{" "}
                       <br />
-                      <b className="keyWords">Жанр:</b> {savedbook.genres}{" "}
+                      <b className="keyWords">Жанр:</b> {savedBook.genres}{" "}
                       <br />
-                      <b className="keyWords">Автори:</b> {savedbook.authors}
+                      <b className="keyWords">Автори:</b> {savedBook.authors}
                     </p>
                   </div>
                 ))

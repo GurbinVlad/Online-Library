@@ -109,7 +109,7 @@ class RegPage extends Component {
             toast(`${response.data.message}`);
           } else {
             // Користувач успішно зареєстрований, перенаправити на головну сторінку
-            this.context.setUserID(response.data.user.userID); // Зберігаємо UserID в localStorage
+            this.context.setUserID(response.data.user.userID); // Зберігаємо UserID в sessionStorage
             console.log(`userID встановлено: ${response.data.user.userID}`);
             toast(
               "Реєстрація виконана успішно!\nПеренаправляємо Вас на головну сторінку",

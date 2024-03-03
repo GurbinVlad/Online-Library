@@ -152,10 +152,6 @@
     transform: scale(0.9);
 }
 
-.body2 {
-    color: aqua;
-    font-size: 30px;
+.buttonReadAndFavorite.disable {
+    background-image: linear-gradient(to bottom right, gray, lightslategray);
 }
-
-
-

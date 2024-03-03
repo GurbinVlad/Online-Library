@@ -1,5 +1,6 @@
 require("dotenv").config();
 const bcrypt = require("bcrypt");
+const { Parser } = require("json2csv");
 const express = require("express");
 const cors = require("cors");
 const session = require("express-session");
@@ -137,8 +138,8 @@ app.post("/form-data-addSaveBook", async (req, res) => {
   }
 });
 
-app.get("/form-data-savedBooks/:userID", async (req, res) => {
-  const { userID } = req.params;
+app.get("/form-data-savedBooks", async (req, res) => {
+  const userID = req.query.userID;
   try {
     const result = await client.query(
       "SELECT books.* FROM savedbooks JOIN books ON savedbooks.bookid = books.bookid WHERE savedbooks.userid = $1",
@@ -150,5 +151,56 @@ app.get("/form-data-savedBooks/:userID", async (req, res) => {
     res
       .status(500)
       .json({ message: "Внутрішня помилка сервера! Спробуйте пізніше!" });
+  }
+});
+
+app.delete(
+  "/form-data-deleteFromSavedBooks/:userID/:bookID",
+  async (req, res) => {
+    const { userID, bookID } = req.params;
+    try {
+      await client.query(
+        "DELETE FROM savedbooks WHERE userid = $1 AND bookid = $2",
+        [userID, bookID],
+      );
+      res.status(200).json({ message: "Книжка успішно видалена з обраних!" });
+    } catch (err) {
+      console.error(err);
+      res
+        .status(500)
+        .json({ message: "Внутрішня помилка сервера! Спробуйте пізніше!" });
+    }
+  },
+);
+
+app.get("/export", async (req, res) => {
+  const userID = req.query.userID;
+  try {
+    // Отримати список книг з бази даних
+    const result = await client.query(
+      "SELECT books.* FROM savedbooks JOIN books ON savedbooks.bookid = books.bookid WHERE savedbooks.userid = $1",
+      [userID],
+    );
+    const savedBooks = result.rows;
+
+    if (savedBooks.length === 0) {
+      return res.status(204).send(); // Відправити статус 204 (No Content), якщо список порожній
+    }
+
+    // Перетворити список книг в CSV
+    const parser = new Parser();
+    const csv = parser.parse(savedBooks);
+
+    // Встановити заголовки відповіді, щоб вказати, що це файл CSV
+    res.setHeader("Content-Type", "text/csv");
+    res.setHeader("Content-Disposition", "attachment; filename=Favorites.csv");
+
+    // Відправити дані CSV як відповідь
+    res.send(csv);
+  } catch (err) {
+    console.error(err);
+    res
+      .status(500)
+      .send("Виникла помилка при вивантаженні списку книжок з обраних");
   }
 });

@@ -3,16 +3,16 @@ import AuthContext from "./AuthContext";
 
 const AuthProvider = ({ children }) => {
   const [userID, setUserID] = useState(null);
+  const [isLoaded, setIsLoaded] = useState(false); // Новий стан для відслідковування завантаження userID
 
-  // Завантажуємо userID з sessionStorage при завантаженні компонента
   useEffect(() => {
     const storedUserID = sessionStorage.getItem("userID");
     if (storedUserID) {
       setUserID(storedUserID);
     }
+    setIsLoaded(true); // Встановлюємо isLoaded в true після завантаження userID
   }, []);
 
-  // Зберігаємо userID в sessionStorage, коли він змінюється
   useEffect(() => {
     if (userID) {
       sessionStorage.setItem("userID", userID);
@@ -25,11 +25,12 @@ const AuthProvider = ({ children }) => {
     }
   }, [userID]);
 
-  return (
+  // Рендеримо дітей тільки тоді, коли userID завантажено
+  return isLoaded ? (
     <AuthContext.Provider value={{ userID, setUserID }}>
       {children}
     </AuthContext.Provider>
-  );
+  ) : null;
 };
 
 export default AuthProvider;

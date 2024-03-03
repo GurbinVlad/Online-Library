@@ -2,9 +2,9 @@ import RegistrationAndAuthorization from "../../Img/RegistrationAndAuthorization
 import "../../Stylesheet/RegistrationAndAuthorization/RegistrationAndAuthorization.css";
 import { toast, ToastContainer } from "react-toastify";
 import { Link, useNavigate } from "react-router-dom";
+import AuthContext from "../Context/AuthContext";
 import "react-toastify/dist/ReactToastify.css";
 import React, { Component } from "react";
-import AuthContext from "../Context/AuthContext";
 import axios from "axios";
 
 // Функціональний компонент вищого порядку, який передає navigate як проп
@@ -109,7 +109,7 @@ class AuthPage extends Component {
             toast(`${response.data.message}`);
           } else {
             // Користувач успішно авторизований, перенаправити на головну сторінку
-            this.context.setUserID(response.data.user.userID); // Зберігаємо UserID в localStorage
+            this.context.setUserID(response.data.user.userID); // Зберігаємо UserID в sessionStorage
             console.log(`userID встановлено: ${response.data.user.userID}`);
             toast(
               "Авторизація виконана успішно!\nПеренаправляємо Вас на головну сторінку",
@@ -178,6 +178,7 @@ class AuthPage extends Component {
                   this.handleForbiddenKeys.handleForbiddenKeysAuthEmail
                 }
                 onChange={this.handleInputChange.handleInputChangeAuthEmail}
+                autoComplete="email"
                 required
               />
             </div>
@@ -196,6 +197,7 @@ class AuthPage extends Component {
                 title="Заповніть обов`язкове поле"
                 value={this.state.pwd}
                 onChange={this.handleInputChange.handleInputChangeAuthPwd}
+                autoComplete="current-password"
                 required
               />
             </div>
