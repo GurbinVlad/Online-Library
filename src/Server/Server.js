@@ -23,7 +23,7 @@ app.use(express.json());
 
 app.use(
   session({
-    secret: "12345678", /// you can to insert your personal secret
+    secret: "12345678", /// can to insert your personal secret
     resave: false,
     saveUninitialized: true,
     cookie: { secure: true },

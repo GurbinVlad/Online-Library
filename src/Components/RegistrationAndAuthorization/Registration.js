@@ -160,7 +160,7 @@ class RegPage extends Component {
 
         <div className="divOrderFormMain">
           <form onSubmit={this.handleSubmitForm} method="POST">
-            <p className="apiBooksLibraryName">API Books Library</p>
+            <p className="apiBooksLibraryName">Online Library</p>
 
             <p className="authAndRegName">Реєстрація</p>
 

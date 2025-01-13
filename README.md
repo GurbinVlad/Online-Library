@@ -1,4 +1,4 @@
-## Гурбін Влад, ВНЗ "НУОП" 3 курс ІКС гр. АІ-212, Backend-Task (Виробнича_практика [1 сем.])
+
 ---
 ### Entity Relationship Diagram:
 ![](https://github.com/GurbinVlad/Backend-Task/blob/main/UML/Entity%20Relationship%20Diagram.png)
@@ -19,5 +19,4 @@
 
 #### Favorite:
 ![](https://github.com/GurbinVlad/Backend-Task/blob/main/src/Img/ResultScreenshot/Favorites.png)
-
 ---

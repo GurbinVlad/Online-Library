@@ -209,7 +209,7 @@ class MainMenu extends Component {
     return (
       <div>
         <Navbar className="navbar" id="navBar">
-          <div className="site-title">API Book Library</div>
+          <div className="site-title">Online Library</div>
           <div className="nav-links">
             <Nav.Link
               href="#"
